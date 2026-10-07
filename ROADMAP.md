@@ -86,13 +86,16 @@ Estimates assume ~10–12 hours/week. Adjust after M0 once we see your pace.
 
 ### M0 — Skeleton that runs end to end (≈1 week)
 
-**Demo:** `docker compose up` → browser shows "API: ok, DB: ok", read from the backend.
+**Demo:** `docker compose up` → browser shows "API: ok, DB: ok", read from the backend; stop the db → UI shows "DB: error".
+
+Design doc: [docs/milestones/M0-skeleton.md](docs/milestones/M0-skeleton.md).
 
 Scope:
 - Monorepo layout, README, `.editorconfig`, `.gitignore`.
 - `services/api/`: FastAPI app in a `uv` workspace, `/health` endpoint checking DB connection, `ruff` + `mypy` + `pytest` with one test.
-- `frontend/`: Vite React TS app, fetches `/api/health`, ESLint + Prettier + Vitest.
-- `infra/docker-compose.yml`: postgres, backend, frontend (dev mode with hot reload for both).
+- `frontend/`: Vite React TS app, polls `/api/health` (TanStack Query), ESLint + Prettier + Vitest.
+- OpenAPI → TS type generation script (moved here from M1) + CI drift check.
+- Root `compose.yaml`: postgres, backend, frontend (dev mode with hot reload via `docker compose watch`).
 - GitHub Actions: lint + typecheck + test for both apps.
 - `docs/adr/0001-monorepo-and-stack.md`.
 
@@ -109,7 +112,6 @@ heading, battery, updating 10×/sec. Kill the backend → UI shows "link lost", 
 Scope:
 - `VehicleLink` interface (a `typing.Protocol`, i.e. structural typing) + `FakeVehicle` implementation (async loop generating telemetry). Lives inside the API for now; moves to `services/gateway/` in M5.
 - Pydantic `Telemetry` model; WebSocket endpoint `/ws/telemetry` broadcasting to all clients.
-- OpenAPI → TS type generation script.
 - Frontend: MapLibre map, drone marker with heading, HUD panel, `useTelemetry` hook with
   reconnect + exponential backoff, connection status indicator.
 - Tests: simulator unit test, WebSocket test with FastAPI `TestClient`.
@@ -239,7 +241,7 @@ Choose based on which vacancy you're targeting:
 
 ## Progress
 
-**Current focus:** M0 — design session (repo scaffolded, milestone doc not written yet).
+**Current focus:** M0 — design done ([M0-skeleton.md](docs/milestones/M0-skeleton.md)), next: task 1.
 
 - [ ] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
