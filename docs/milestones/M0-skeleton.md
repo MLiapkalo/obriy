@@ -105,7 +105,7 @@ Committed as `.env.example`; `.env` is gitignored.
 
 | # | Task | Acceptance check | PR |
 |---|------|------------------|----|
-| 1 | uv workspace + API skeleton: root `pyproject.toml`, `services/api` package, `create_app()`, `/api/health/live`, ruff/mypy (strict)/pytest config, `justfile` | `just api-check` (ruff check, ruff format --check, mypy, pytest) passes; one test for `/api/health/live` | |
+| 1 | uv workspace + API skeleton: root `pyproject.toml`, `services/api` package, `create_app()`, `/api/health/live`, ruff/mypy (strict)/pytest config, `justfile` | `just api-check` (ruff check, ruff format --check, mypy, pytest) passes; one test for `/api/health/live` | ✅ [#1](https://github.com/MLiapkalo/obriy/pull/1) |
 | 2 | Settings + engine lifespan + `/api/health` with DB check and 1 s timeout | Tests cover ok → 200 and failure/timeout → 503 via dependency overrides | |
 | 3 | Frontend skeleton: Vite, React 19, TS strict, ESLint (flat config), Prettier, Vitest + Testing Library | `just web-check` (lint, format check, tsc, vitest) passes | |
 | 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | |
