@@ -241,9 +241,9 @@ Choose based on which vacancy you're targeting:
 
 ## Progress
 
-**Current focus:** M0 — design done ([M0-skeleton.md](docs/milestones/M0-skeleton.md)), next: task 1.
+**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — task 1 (uv workspace + API skeleton) in progress on `m0/api-skeleton`.
 
-- [ ] M0 — Skeleton
+- [~] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
 - [ ] M2 — Flight recording & replay
 - [ ] M3 — Auth & roles

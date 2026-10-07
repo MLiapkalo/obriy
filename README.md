@@ -1,4 +1,4 @@
-# Obrii
+# Obriy
 
 *Обрій — "horizon" in Ukrainian.*
 

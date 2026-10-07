@@ -4,7 +4,7 @@ Project context for Claude Code sessions in this repo.
 
 ## Project
 
-Obrii — web ground control station for drones. Plan and progress: `ROADMAP.md`.
+Obriy — web ground control station for drones. Plan and progress: `ROADMAP.md`.
 Current milestone design doc: `docs/milestones/`. Lasting decisions: `docs/adr/`.
 
 ## Working agreement

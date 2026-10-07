@@ -1,6 +1,6 @@
 # M0 — Skeleton that runs end to end
 
-- Status: Design
+- Status: In progress
 - Branch prefix: `m0/`
 
 ## 1. Goal and demo
@@ -22,13 +22,15 @@ browser ──/api/*──▶ Vite dev server (proxy) ──▶ api:8000 (FastAP
 
 - **Single origin.** The API serves all routes under `/api` itself. The Vite dev proxy (now) and nginx (M7)
   forward `/api/*` unchanged — no path rewriting, no CORS middleware.
-- **Python layout.** uv workspace root `pyproject.toml` at the repo root, members `services/*` and `packages/*`.
-  The API is a src-layout package:
+- **Python layout.** uv workspace root `pyproject.toml` at the repo root (virtual: no `[project]`; holds the
+  workspace members, the shared dev dependency group and ruff/mypy config). Members are `services/*`;
+  `packages/*` is added in M1 when `packages/contracts` gets its own `pyproject.toml` (uv rejects a member
+  directory without one). The API is a src-layout package:
 
   ```
   services/api/
     pyproject.toml
-    src/obrii_api/
+    src/obriy_api/
       main.py      # create_app() factory, lifespan
       config.py    # Settings (pydantic-settings), read from env
       db.py        # async engine creation/disposal
@@ -78,8 +80,8 @@ are declared in the OpenAPI spec).
 
 | Env var | Example | Used by |
 |---|---|---|
-| `DATABASE_URL` | `postgresql+asyncpg://obrii:obrii@db:5432/obrii` | api |
-| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `obrii` | db |
+| `DATABASE_URL` | `postgresql+asyncpg://obriy:obriy@db:5432/obriy` | api |
+| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `obriy` | db |
 | `API_PROXY_TARGET` | `http://api:8000` | web (Vite proxy) |
 
 Committed as `.env.example`; `.env` is gitignored.
