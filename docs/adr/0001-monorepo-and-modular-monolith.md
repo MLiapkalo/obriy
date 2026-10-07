@@ -5,7 +5,7 @@
 
 ## Context
 
-Obrii is built by one developer, in milestones, as both a working system and a public portfolio piece.
+Obriy is built by one developer, in milestones, as both a working system and a public portfolio piece.
 It spans a React frontend, Python backend services, shared message schemas, and infrastructure
 (Postgres, autopilot simulator, media server). Changes frequently cross the API/UI boundary.
 
