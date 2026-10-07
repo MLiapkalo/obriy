@@ -239,6 +239,8 @@ Choose based on which vacancy you're targeting:
 
 ## Progress
 
+**Current focus:** M0 — design session (repo scaffolded, milestone doc not written yet).
+
 - [ ] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
 - [ ] M2 — Flight recording & replay
