@@ -57,6 +57,6 @@ Rules:
 ## Tooling
 
 - Python 3.14, `uv` workspace, `ruff` (lint + format), `mypy --strict`, `pytest`.
-- Frontend: Node 22+, `pnpm`, Vite, ESLint, Prettier, Vitest.
+- Frontend: Node 22+, `pnpm` 12, TypeScript 7, Vite, oxlint (type-aware), Prettier, Vitest.
 - `just` as the task runner; Docker Compose for local stack.
 - Commands: _to be filled in during M0._

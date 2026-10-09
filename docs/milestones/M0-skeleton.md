@@ -98,6 +98,9 @@ Committed as `.env.example`; `.env` is gitignored.
 - **`postgres:17` for M0.** PostGIS image choice deferred to M2 (`postgis/postgis` has historically lacked
   arm64 images — check before adopting on Apple Silicon).
 - **Unit tests via `app.dependency_overrides`** with fake ok/failing DB checks. Real-Postgres tests start in M2.
+- **oxlint instead of ESLint.** `typescript-eslint` only supports TypeScript < 6.1, so type-aware ESLint rules
+  would pin the frontend to TS 6. oxlint's type-aware mode (`oxlint-tsgolint`) runs on tsgo (TS 7) and has the
+  typescript, react/react-hooks, jsx-a11y and import rules built in.
 - **`packages/contracts` stays empty** until M1 introduces shared message schemas.
 - Repo-level choices (monorepo, no Nx, `just`): [ADR 0001](../adr/0001-monorepo-and-modular-monolith.md).
 
@@ -107,7 +110,7 @@ Committed as `.env.example`; `.env` is gitignored.
 |---|------|------------------|----|
 | 1 | uv workspace + API skeleton: root `pyproject.toml`, `services/api` package, `create_app()`, `/api/health/live`, ruff/mypy (strict)/pytest config, `justfile` | `just api-check` (ruff check, ruff format --check, mypy, pytest) passes; one test for `/api/health/live` | ✅ [#1](https://github.com/MLiapkalo/obriy/pull/1) |
 | 2 | Settings + engine lifespan + `/api/health` with DB check and 1 s timeout | Tests cover ok → 200 and failure/timeout → 503 via dependency overrides | ✅ [#2](https://github.com/MLiapkalo/obriy/pull/2) |
-| 3 | Frontend skeleton: Vite, React 19, TS strict, ESLint (flat config), Prettier, Vitest + Testing Library | `just web-check` (lint, format check, tsc, vitest) passes | |
+| 3 | Frontend skeleton: Vite, React 19, TS 7 strict, oxlint (type-aware), Prettier, Vitest + Testing Library | `just web-check` (lint, format check, tsc, vitest) passes | |
 | 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | |
 | 5 | Dev Dockerfiles + root `compose.yaml` (db, api, web) + Vite proxy + `.env.example` + `just dev` | Both demo steps work from a clean clone | |
 | 6 | GitHub Actions: path-filtered `api` and `web` jobs, generated-types drift check | CI green on the PR; a stale types file fails it | |
