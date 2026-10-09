@@ -101,6 +101,10 @@ Committed as `.env.example`; `.env` is gitignored.
 - **oxlint instead of ESLint.** `typescript-eslint` only supports TypeScript < 6.1, so type-aware ESLint rules
   would pin the frontend to TS 6. oxlint's type-aware mode (`oxlint-tsgolint`) runs on tsgo (TS 7) and has the
   typescript, react/react-hooks, jsx-a11y and import rules built in.
+- **`openapi-typescript` runs via `pnpm dlx` with TypeScript 5.9.** It uses the TS compiler JS API that TS 7
+  no longer exposes (peer range `typescript ^5`), and pnpm resolves peers from the project, so it can't be a
+  regular dev dependency. Versions are pinned in the `gen-types` recipe; move it back to `devDependencies` once
+  it supports TS 7. The exported spec is committed at `services/api/openapi.json` next to the generated types.
 - **`packages/contracts` stays empty** until M1 introduces shared message schemas.
 - Repo-level choices (monorepo, no Nx, `just`): [ADR 0001](../adr/0001-monorepo-and-modular-monolith.md).
 

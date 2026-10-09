@@ -50,9 +50,7 @@ async def run_check(probe: DbProbe, timeout_s: float) -> CheckResult:
             detail=f"timed out after {timeout_s}s",
         )
     except Exception as exc:
-        return CheckResult(
-            status="error", latency_ms=_elapsed_ms(start, perf_counter()), detail=type(exc).__name__
-        )
+        return CheckResult(status="error", latency_ms=_elapsed_ms(start, perf_counter()), detail=type(exc).__name__)
     return CheckResult(status="ok", latency_ms=_elapsed_ms(start, perf_counter()), detail=None)
 
 

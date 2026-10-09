@@ -1,80 +1,59 @@
 import asyncio
 
+import pytest
 from fastapi.testclient import TestClient
 
-from obriy_api.db import get_db_probe
+from obriy_api.db import DbProbe, get_db_probe
 from obriy_api.health import get_db_check_timeout
 from obriy_api.main import create_app
 
 
-def test_live_returns_ok() -> None:
-    client = TestClient(create_app())
+async def ok_probe() -> None:
+    return None
 
-    response = client.get("/api/health/live")
+
+async def refused_probe() -> None:
+    raise ConnectionRefusedError
+
+
+async def slow_probe() -> None:
+    await asyncio.sleep(0.5)
+
+
+def client_with(probe: DbProbe, timeout_s: float = 0.01) -> TestClient:
+    app = create_app()
+    app.dependency_overrides[get_db_probe] = lambda: probe
+    app.dependency_overrides[get_db_check_timeout] = lambda: timeout_s
+    return TestClient(app)
+
+
+def test_live_returns_ok() -> None:
+    response = TestClient(create_app()).get("/api/health/live")
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
 
-def test_ready_returns_degraded_when_db_connection_fails() -> None:
-    app = create_app()
-
-    async def failing_probe() -> None:
-        raise ConnectionRefusedError()
-
-    app.dependency_overrides[get_db_probe] = lambda: failing_probe
-    client = TestClient(app)
-
-    response = client.get("/api/health")
-
-    assert response.status_code == 503
-
-    body = response.json()
-
-    assert body["status"] == "degraded"
-    assert body["checks"]["db"]["status"] == "error"
-    assert body["checks"]["db"]["latency_ms"] >= 0.0
-    assert "ConnectionRefusedError" in body["checks"]["db"]["detail"]
-
-
-def test_ready_returns_degraded_when_db_connection_times_out() -> None:
-    app = create_app()
-
-    async def slow_probe() -> None:
-        await asyncio.sleep(0.5)
-
-    app.dependency_overrides[get_db_probe] = lambda: slow_probe
-    app.dependency_overrides[get_db_check_timeout] = lambda: 0.01
-    client = TestClient(app)
-
-    response = client.get("/api/health")
-
-    assert response.status_code == 503
-
-    body = response.json()
-
-    assert body["status"] == "degraded"
-    assert body["checks"]["db"]["status"] == "error"
-    assert body["checks"]["db"]["latency_ms"] >= 10
-    assert "timed out" in body["checks"]["db"]["detail"]
-
-
-def test_ready_returns_ok_when_db_connection_succeeds() -> None:
-    app = create_app()
-
-    async def successful_probe() -> None:
-        return None
-
-    app.dependency_overrides[get_db_probe] = lambda: successful_probe
-    client = TestClient(app)
-
-    response = client.get("/api/health")
+def test_ready_returns_ok_when_db_probe_succeeds() -> None:
+    response = client_with(ok_probe).get("/api/health")
 
     assert response.status_code == 200
-
     body = response.json()
+    assert body["checks"]["db"].pop("latency_ms") >= 0
+    assert body == {"status": "ok", "checks": {"db": {"status": "ok", "detail": None}}}
 
-    assert body["status"] == "ok"
-    assert body["checks"]["db"]["status"] == "ok"
-    assert body["checks"]["db"]["latency_ms"] >= 0.0
-    assert body["checks"]["db"]["detail"] is None
+
+@pytest.mark.parametrize(
+    ("probe", "detail"),
+    [
+        (refused_probe, "ConnectionRefusedError"),
+        (slow_probe, "timed out after 0.01s"),
+    ],
+)
+def test_ready_returns_degraded_when_db_probe_fails(probe: DbProbe, detail: str) -> None:
+    response = client_with(probe).get("/api/health")
+
+    assert response.status_code == 503
+    body = response.json()
+    assert body["checks"]["db"].pop("latency_ms") >= 0
+    assert body == {"status": "degraded", "checks": {"db": {"status": "error", "detail": detail}}}
