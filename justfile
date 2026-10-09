@@ -13,3 +13,16 @@ api-fmt:
 
 api-run:
     uv run uvicorn --factory obriy_api.main:create_app --reload
+
+web-check:
+    pnpm --dir frontend lint
+    pnpm --dir frontend format:check
+    pnpm --dir frontend typecheck
+    pnpm --dir frontend test
+
+web-fmt:
+    pnpm --dir frontend lint:fix
+    pnpm --dir frontend format
+
+web-dev:
+    pnpm --dir frontend dev

@@ -241,7 +241,7 @@ Choose based on which vacancy you're targeting:
 
 ## Progress
 
-**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–2 done; next: task 3 (frontend skeleton: Vite, React 19, TS strict, ESLint, Prettier, Vitest).
+**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–3 done; next: task 4 (OpenAPI → TS type generation, `openapi-fetch` client, TanStack Query health polling UI).
 
 - [~] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
