@@ -241,7 +241,7 @@ Choose based on which vacancy you're targeting:
 
 ## Progress
 
-**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — task 1 done; next: task 2 (settings, DB engine lifespan, `/api/health` readiness check).
+**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–2 done; next: task 3 (frontend skeleton: Vite, React 19, TS strict, ESLint, Prettier, Vitest).
 
 - [~] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
