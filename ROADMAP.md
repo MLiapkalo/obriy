@@ -241,7 +241,7 @@ Choose based on which vacancy you're targeting:
 
 ## Progress
 
-**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–3 done; next: task 4 (OpenAPI → TS type generation, `openapi-fetch` client, TanStack Query health polling UI).
+**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–4 done; next: task 5 (dev Dockerfiles, `compose.yaml` with db/api/web, Vite proxy, `.env.example`, `just dev`).
 
 - [~] M0 — Skeleton
 - [ ] M1 — Fake drone on a map

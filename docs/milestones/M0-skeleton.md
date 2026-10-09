@@ -101,6 +101,10 @@ Committed as `.env.example`; `.env` is gitignored.
 - **oxlint instead of ESLint.** `typescript-eslint` only supports TypeScript < 6.1, so type-aware ESLint rules
   would pin the frontend to TS 6. oxlint's type-aware mode (`oxlint-tsgolint`) runs on tsgo (TS 7) and has the
   typescript, react/react-hooks, jsx-a11y and import rules built in.
+- **`openapi-typescript` runs via `pnpm dlx` with TypeScript 5.9.** It uses the TS compiler JS API that TS 7
+  no longer exposes (peer range `typescript ^5`), and pnpm resolves peers from the project, so it can't be a
+  regular dev dependency. Versions are pinned in the `gen-types` recipe; move it back to `devDependencies` once
+  it supports TS 7. The exported spec is committed at `services/api/openapi.json` next to the generated types.
 - **`packages/contracts` stays empty** until M1 introduces shared message schemas.
 - Repo-level choices (monorepo, no Nx, `just`): [ADR 0001](../adr/0001-monorepo-and-modular-monolith.md).
 
@@ -111,7 +115,7 @@ Committed as `.env.example`; `.env` is gitignored.
 | 1 | uv workspace + API skeleton: root `pyproject.toml`, `services/api` package, `create_app()`, `/api/health/live`, ruff/mypy (strict)/pytest config, `justfile` | `just api-check` (ruff check, ruff format --check, mypy, pytest) passes; one test for `/api/health/live` | ✅ [#1](https://github.com/MLiapkalo/obriy/pull/1) |
 | 2 | Settings + engine lifespan + `/api/health` with DB check and 1 s timeout | Tests cover ok → 200 and failure/timeout → 503 via dependency overrides | ✅ [#2](https://github.com/MLiapkalo/obriy/pull/2) |
 | 3 | Frontend skeleton: Vite, React 19, TS 7 strict, oxlint (type-aware), Prettier, Vitest + Testing Library | `just web-check` (lint, format check, tsc, vitest) passes | ✅ [#3](https://github.com/MLiapkalo/obriy/pull/3) |
-| 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | |
+| 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | ✅ [#4](https://github.com/MLiapkalo/obriy/pull/4) |
 | 5 | Dev Dockerfiles + root `compose.yaml` (db, api, web) + Vite proxy + `.env.example` + `just dev` | Both demo steps work from a clean clone | |
 | 6 | GitHub Actions: path-filtered `api` and `web` jobs, generated-types drift check | CI green on the PR; a stale types file fails it | |
 | 7 | Close-out: README quick start, CLAUDE.md Commands section, retro below, tick ROADMAP | Demo re-run from a fresh clone | |
