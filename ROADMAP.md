@@ -211,9 +211,9 @@ Scope:
 
 ## Progress
 
-**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–6 done; next: task 7 (close-out: README quick start, CLAUDE.md Commands, retro, demo from a fresh clone).
+**Current focus:** M1 — Fake drone on a map; next: design session → `docs/milestones/M1-*.md`.
 
-- [~] M0 — Skeleton
+- [x] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
 - [ ] M2 — Flight recording & replay
 - [ ] M3 — Auth & roles

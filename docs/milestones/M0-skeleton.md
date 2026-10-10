@@ -1,6 +1,6 @@
 # M0 — Skeleton that runs end to end
 
-- Status: In progress
+- Status: Done
 - Branch prefix: `m0/`
 
 ## 1. Goal and demo
@@ -84,8 +84,8 @@ are declared in the OpenAPI spec).
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `obriy` / `root` / `obriy` | db |
 | `API_PROXY_TARGET` | `http://api:8000` | web (Vite proxy) |
 
-`compose.yaml` holds dev defaults for `POSTGRES_*` (`${VAR:-default}`) and builds `DATABASE_URL` and
-`API_PROXY_TARGET` from them, so a clean clone needs no `.env`. Overrides go in a root `.env` (gitignored);
+`compose.yaml` holds dev defaults for `POSTGRES_*` (`${VAR:-default}`), builds `DATABASE_URL` from them and
+sets `API_PROXY_TARGET`, so a clean clone needs no `.env`. Overrides go in a root `.env` (gitignored);
 `.env.example` documents them.
 
 ## 4. Decisions
@@ -137,12 +137,29 @@ are declared in the OpenAPI spec).
 | 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | ✅ [#4](https://github.com/MLiapkalo/obriy/pull/4) |
 | 5 | Dev Dockerfiles + root `compose.yaml` (db, api, web) + Vite proxy + `.env.example` + `just dev` | Both demo steps work from a clean clone | ✅ [#5](https://github.com/MLiapkalo/obriy/pull/5) |
 | 6 | GitHub Actions: path-filtered `api`, `web` and `types` (generated-types drift check) workflows | CI green on the PR; a stale types file fails it | ✅ [#6](https://github.com/MLiapkalo/obriy/pull/6) |
-| 7 | Close-out: README quick start, CLAUDE.md Commands section, retro below, tick ROADMAP | Demo re-run from a fresh clone | |
+| 7 | Close-out: README quick start, CLAUDE.md Commands section, retro below, tick ROADMAP | Demo re-run from a fresh clone | ✅ [#7](https://github.com/MLiapkalo/obriy/pull/7) |
 
 ## 6. Open questions
 
-- Exact `just` recipe names.
+_None._
 
 ## 7. As built / retro
 
-_Filled at close-out._
+Built 2026-10-07 → 2026-10-10 in six PRs (#1–#6); demo passed from a fresh clone.
+
+**Deviations from the design** (details in §4):
+- OpenAPI → TS type generation pulled forward from M1.
+- Postgres 18 instead of 17; volume mounted at `/var/lib/postgresql`.
+- oxlint instead of ESLint, to stay on TypeScript 7; `openapi-typescript` runs via `pnpm dlx` on TS 5.9.
+- Health `detail` reports the root-cause exception type (follows `__cause__`), not the SQLAlchemy wrapper.
+- CI is three path-filtered workflows (`api`, `web`, `types`) rather than two jobs; no Docker builds in CI.
+- Tool versions have one source each: uv via `required-version`, pnpm and Node via `devEngines`, read by
+  both local tooling and CI.
+
+**What went well:**
+- Contract-first health endpoint: the generated types made the frontend side mechanical, and the drift check
+  keeps them honest.
+- Liveness/readiness split held up in the demo: stopping the DB degrades the UI without restarting the API.
+
+**What to change:** nothing significant. Adopting current major versions (TS 7, pnpm 12, Postgres 18) was
+deliberate; the workarounds it needed are recorded in §4.
