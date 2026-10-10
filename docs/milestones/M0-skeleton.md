@@ -68,7 +68,7 @@ Readiness: dependencies are reachable. Used by the UI.
 {
   "status": "ok" | "degraded",
   "checks": {
-    "db": { "status": "ok" | "error", "latency_ms": 3.1, "detail": null | "<short error message>" }
+    "db": { "status": "ok" | "error", "latency_ms": 3.1, "detail": null | "<root-cause exception type, e.g. InvalidPasswordError>" }
   }
 }
 ```
