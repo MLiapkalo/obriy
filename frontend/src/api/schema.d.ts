@@ -6,7 +6,7 @@
 export interface paths {
     "/api/health": {
         parameters: {
-            query?: string;
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
