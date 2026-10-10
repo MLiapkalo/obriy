@@ -17,7 +17,7 @@ Demo, from a clean clone:
 ## 2. Design
 
 ```
-browser ──/api/*──▶ Vite dev server (proxy) ──▶ api:8000 (FastAPI, uvicorn --reload) ──▶ db:5432 (Postgres 17)
+browser ──/api/*──▶ Vite dev server (proxy) ──▶ api:8000 (FastAPI, uvicorn --reload) ──▶ db:5432 (Postgres 18)
 ```
 
 - **Single origin.** The API serves all routes under `/api` itself. The Vite dev proxy (now) and nginx (M7)
@@ -68,7 +68,7 @@ Readiness: dependencies are reachable. Used by the UI.
 {
   "status": "ok" | "degraded",
   "checks": {
-    "db": { "status": "ok" | "error", "latency_ms": 3.1, "detail": null | "<short error message>" }
+    "db": { "status": "ok" | "error", "latency_ms": 3.1, "detail": null | "<root-cause exception type, e.g. InvalidPasswordError>" }
   }
 }
 ```
@@ -80,11 +80,13 @@ are declared in the OpenAPI spec).
 
 | Env var | Example | Used by |
 |---|---|---|
-| `DATABASE_URL` | `postgresql+asyncpg://obriy:obriy@db:5432/obriy` | api |
-| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `obriy` | db |
+| `DATABASE_URL` | `postgresql+asyncpg://obriy:root@db:5432/obriy` | api |
+| `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `obriy` / `root` / `obriy` | db |
 | `API_PROXY_TARGET` | `http://api:8000` | web (Vite proxy) |
 
-Committed as `.env.example`; `.env` is gitignored.
+`compose.yaml` holds dev defaults for `POSTGRES_*` (`${VAR:-default}`) and builds `DATABASE_URL` and
+`API_PROXY_TARGET` from them, so a clean clone needs no `.env`. Overrides go in a root `.env` (gitignored);
+`.env.example` documents them.
 
 ## 4. Decisions
 
@@ -95,8 +97,18 @@ Committed as `.env.example`; `.env` is gitignored.
   dependency detail.
 - **No `depends_on: service_healthy` from api to db.** The API must start and report a missing DB, not wait for it.
 - **`docker compose watch` over bind mounts** for hot reload.
-- **`postgres:17` for M0.** PostGIS image choice deferred to M2 (`postgis/postgis` has historically lacked
-  arm64 images — check before adopting on Apple Silicon).
+- **`postgres:18.6`** (design said 17; no reason to start a new project a major behind). 18+ images keep data in
+  a versioned subdirectory, so the volume is mounted at `/var/lib/postgresql`, not `…/data`. PostGIS image
+  choice deferred to M2 (`postgis/postgis` has historically lacked arm64 images — check before adopting on
+  Apple Silicon).
+- **API image: `python:3.14-slim` + pinned uv binary** (`COPY --from=ghcr.io/astral-sh/uv`), so Python and uv
+  upgrade independently. Dependencies are installed in their own layer (`--no-install-workspace`) before the
+  source is copied; the workspace member is an editable install, so synced source is picked up by `--reload`.
+- **Web image: `ghcr.io/pnpm/pnpm`, Node pinned via `devEngines.runtime`** in `package.json` (replaces the
+  `packageManager` field). pnpm downloads the exact Node version during install, so the host and the image
+  run the same Node. CI must pin the pnpm version itself.
+- **`init: true` for `web`.** As PID 1, Vite ignores SIGINT; an init process forwards signals so Ctrl+C and
+  `docker compose stop` work. uvicorn handles signals itself.
 - **Unit tests via `app.dependency_overrides`** with fake ok/failing DB checks. Real-Postgres tests start in M2.
 - **oxlint instead of ESLint.** `typescript-eslint` only supports TypeScript < 6.1, so type-aware ESLint rules
   would pin the frontend to TS 6. oxlint's type-aware mode (`oxlint-tsgolint`) runs on tsgo (TS 7) and has the
@@ -116,7 +128,7 @@ Committed as `.env.example`; `.env` is gitignored.
 | 2 | Settings + engine lifespan + `/api/health` with DB check and 1 s timeout | Tests cover ok → 200 and failure/timeout → 503 via dependency overrides | ✅ [#2](https://github.com/MLiapkalo/obriy/pull/2) |
 | 3 | Frontend skeleton: Vite, React 19, TS 7 strict, oxlint (type-aware), Prettier, Vitest + Testing Library | `just web-check` (lint, format check, tsc, vitest) passes | ✅ [#3](https://github.com/MLiapkalo/obriy/pull/3) |
 | 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | ✅ [#4](https://github.com/MLiapkalo/obriy/pull/4) |
-| 5 | Dev Dockerfiles + root `compose.yaml` (db, api, web) + Vite proxy + `.env.example` + `just dev` | Both demo steps work from a clean clone | |
+| 5 | Dev Dockerfiles + root `compose.yaml` (db, api, web) + Vite proxy + `.env.example` + `just dev` | Both demo steps work from a clean clone | ✅ [#5](https://github.com/MLiapkalo/obriy/pull/5) |
 | 6 | GitHub Actions: path-filtered `api` and `web` jobs, generated-types drift check | CI green on the PR; a stale types file fails it | |
 | 7 | Close-out: README quick start, CLAUDE.md Commands section, retro below, tick ROADMAP | Demo re-run from a fresh clone | |
 
@@ -124,7 +136,6 @@ Committed as `.env.example`; `.env` is gitignored.
 
 - Should CI also build the Docker images (`docker compose build`)?
 - Exact `just` recipe names.
-- API Dockerfile base: `ghcr.io/astral-sh/uv` image vs `python:3.14-slim` with the uv binary copied in.
 
 ## 7. As built / retro
 

@@ -9,7 +9,7 @@ Current milestone design doc: `docs/milestones/`. Lasting decisions: `docs/adr/`
 
 ## Working agreement
 
-- The owner writes the feature code. Claude helps with system design and architecture decisions, explains,
+- The owner writes the feature code. Claude helps with system design and architecture decisions,
   unblocks, reviews diffs and suggests improvements. Claude writes code only when explicitly asked
   (boilerplate/config is fine on request).
 - Workflow per milestone: design session → `docs/milestones/Mx-*.md` (contracts + tasks) → one branch/PR per task →
@@ -57,6 +57,6 @@ Rules:
 ## Tooling
 
 - Python 3.14, `uv` workspace, `ruff` (lint + format), `mypy --strict`, `pytest`.
-- Frontend: Node 22+, `pnpm` 12, TypeScript 7, Vite, oxlint (type-aware), Prettier, Vitest.
+- Frontend: Node 22 (exact version pinned via `devEngines.runtime`), `pnpm` 12, TypeScript 7, Vite, oxlint (type-aware), Prettier, Vitest.
 - `just` as the task runner; Docker Compose for local stack.
 - Commands: _to be filled in during M0._

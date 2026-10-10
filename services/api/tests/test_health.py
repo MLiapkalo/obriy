@@ -16,6 +16,10 @@ async def refused_probe() -> None:
     raise ConnectionRefusedError
 
 
+async def wrapped_probe() -> None:
+    raise RuntimeError("driver wrapper") from ConnectionRefusedError()
+
+
 async def slow_probe() -> None:
     await asyncio.sleep(0.5)
 
@@ -48,6 +52,7 @@ def test_ready_returns_ok_when_db_probe_succeeds() -> None:
     [
         (refused_probe, "ConnectionRefusedError"),
         (slow_probe, "timed out after 0.01s"),
+        (wrapped_probe, "ConnectionRefusedError"),
     ],
 )
 def test_ready_returns_degraded_when_db_probe_fails(probe: DbProbe, detail: str) -> None:
