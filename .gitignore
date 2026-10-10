@@ -33,5 +33,5 @@ coverage/
 infra/data/
 *.pmtiles
 
-# Local Claude instructions
-CLAUDE.local.md
+# Local notes
+*.local.md

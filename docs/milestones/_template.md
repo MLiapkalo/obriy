@@ -31,4 +31,4 @@ Deliberately deferred to implementation.
 
 ## 7. As built / retro
 
-Filled at close-out: deviations from the design, what went well, what was learned.
+Filled at close-out: deviations from the design, what went well, what to change.

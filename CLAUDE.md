@@ -9,7 +9,7 @@ Current milestone design doc: `docs/milestones/`. Lasting decisions: `docs/adr/`
 
 ## Working agreement
 
-- The owner writes the feature code. Claude helps with system design and architecture decisions, explains,
+- The owner writes the feature code. Claude helps with system design and architecture decisions,
   unblocks, reviews diffs and suggests improvements. Claude writes code only when explicitly asked
   (boilerplate/config is fine on request).
 - Workflow per milestone: design session → `docs/milestones/Mx-*.md` (contracts + tasks) → one branch/PR per task →
