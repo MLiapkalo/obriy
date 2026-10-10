@@ -137,7 +137,7 @@ sets `API_PROXY_TARGET`, so a clean clone needs no `.env`. Overrides go in a roo
 | 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | ✅ [#4](https://github.com/MLiapkalo/obriy/pull/4) |
 | 5 | Dev Dockerfiles + root `compose.yaml` (db, api, web) + Vite proxy + `.env.example` + `just dev` | Both demo steps work from a clean clone | ✅ [#5](https://github.com/MLiapkalo/obriy/pull/5) |
 | 6 | GitHub Actions: path-filtered `api`, `web` and `types` (generated-types drift check) workflows | CI green on the PR; a stale types file fails it | ✅ [#6](https://github.com/MLiapkalo/obriy/pull/6) |
-| 7 | Close-out: README quick start, CLAUDE.md Commands section, retro below, tick ROADMAP | Demo re-run from a fresh clone | ✅ |
+| 7 | Close-out: README quick start, CLAUDE.md Commands section, retro below, tick ROADMAP | Demo re-run from a fresh clone | ✅ [#7](https://github.com/MLiapkalo/obriy/pull/7) |
 
 ## 6. Open questions
 
