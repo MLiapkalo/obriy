@@ -102,7 +102,9 @@ are declared in the OpenAPI spec).
   choice deferred to M2 (`postgis/postgis` has historically lacked arm64 images — check before adopting on
   Apple Silicon).
 - **API image: `python:3.14-slim` + pinned uv binary** (`COPY --from=ghcr.io/astral-sh/uv`), so Python and uv
-  upgrade independently. Dependencies are installed in their own layer (`--no-install-workspace`) before the
+  upgrade independently. The uv version is set once in the root `pyproject.toml`
+  (`[tool.uv] required-version`, also read by setup-uv in CI); the Dockerfile tag must match it.
+  Dependencies are installed in their own layer (`--no-install-workspace`) before the
   source is copied; the workspace member is an editable install, so synced source is picked up by `--reload`.
 - **Web image: `ghcr.io/pnpm/pnpm`, Node pinned via `devEngines.runtime`** in `package.json` (replaces the
   `packageManager` field). pnpm downloads the exact Node version during install, so the host and the image

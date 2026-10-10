@@ -1,5 +1,6 @@
 FROM python:3.14-slim
-COPY --from=ghcr.io/astral-sh/uv:0.12.10 /uv /uvx /bin/
+# uv version must match [tool.uv] required-version in the root pyproject.toml
+COPY --from=ghcr.io/astral-sh/uv:0.12.24 /uv /uvx /bin/
 
 ENV UV_LINK_MODE=copy \
     PATH="/app/.venv/bin:$PATH"
