@@ -211,7 +211,7 @@ Scope:
 
 ## Progress
 
-**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–4 done; next: task 5 (dev Dockerfiles, `compose.yaml` with db/api/web, Vite proxy, `.env.example`, `just dev`).
+**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–5 done; next: task 6 (GitHub Actions: path-filtered `api`/`web` jobs, generated-types drift check).
 
 - [~] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
