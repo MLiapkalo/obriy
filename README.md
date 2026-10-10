@@ -18,4 +18,11 @@ mission planning, vehicle commands, flight recording and replay, live video — 
 
 ## Quick start
 
-_Coming in M0._
+Requires Docker with Compose v2.
+
+```sh
+just dev    # docker compose up --build --watch
+```
+
+Open http://localhost:5173. The API is on http://localhost:8000 (`/docs` for OpenAPI).
+Defaults need no configuration; to override database credentials, copy `.env.example` to `.env`.

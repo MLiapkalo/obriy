@@ -1,6 +1,9 @@
 default:
     @just --list
 
+dev:
+    docker compose up --build --watch
+
 api-check:
     uv run ruff check services/api
     uv run ruff format --check services/api

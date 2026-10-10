@@ -68,7 +68,7 @@ Key ideas:
 | Backend | Python 3.14 + FastAPI | Async, typed, built-in dependency injection and OpenAPI generation; drone tooling (pymavlink, ArduPilot) is Python |
 | Python tooling | `uv` (packages, venvs, Python versions), `ruff` (lint + format), `mypy` strict (static types), `pytest` | Modern and fast; strict typing catches errors early in a dynamically typed language |
 | ORM / migrations | SQLAlchemy 2 (async) + Alembic | De facto standard ORM and migration tool in Python |
-| DB | Postgres 17 + PostGIS | Spatial types and queries for tracks and missions |
+| DB | Postgres 18 + PostGIS | Spatial types and queries for tracks and missions |
 | Bus | Redis pub/sub (decided at M5) | Simple; NATS considered as alternative |
 | Drone sim | ArduPilot SITL in Docker | Real autopilot, speaks real MAVLink, works with QGroundControl |
 | Video | ffmpeg → MediaMTX → WebRTC (WHEP) | Low latency in browser, no custom media server code |
