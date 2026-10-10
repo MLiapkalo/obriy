@@ -1,3 +1,8 @@
+[tool.uv]
+# Single source for the uv version: enforced locally, read by setup-uv in CI.
+# Keep services/api/Dockerfile in sync.
+required-version = "==0.12.24"
+
 [tool.uv.workspace]
 members = ["services/*"]
 

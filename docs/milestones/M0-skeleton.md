@@ -102,11 +102,13 @@ are declared in the OpenAPI spec).
   choice deferred to M2 (`postgis/postgis` has historically lacked arm64 images — check before adopting on
   Apple Silicon).
 - **API image: `python:3.14-slim` + pinned uv binary** (`COPY --from=ghcr.io/astral-sh/uv`), so Python and uv
-  upgrade independently. Dependencies are installed in their own layer (`--no-install-workspace`) before the
+  upgrade independently. The uv version is set once in the root `pyproject.toml`
+  (`[tool.uv] required-version`, also read by setup-uv in CI); the Dockerfile tag must match it.
+  Dependencies are installed in their own layer (`--no-install-workspace`) before the
   source is copied; the workspace member is an editable install, so synced source is picked up by `--reload`.
 - **Web image: `ghcr.io/pnpm/pnpm`, Node pinned via `devEngines.runtime`** in `package.json` (replaces the
   `packageManager` field). pnpm downloads the exact Node version during install, so the host and the image
-  run the same Node. CI must pin the pnpm version itself.
+  run the same Node. CI's `pnpm/setup` reads both versions from `devEngines` too.
 - **`init: true` for `web`.** As PID 1, Vite ignores SIGINT; an init process forwards signals so Ctrl+C and
   `docker compose stop` work. uvicorn handles signals itself.
 - **Unit tests via `app.dependency_overrides`** with fake ok/failing DB checks. Real-Postgres tests start in M2.
@@ -117,6 +119,11 @@ are declared in the OpenAPI spec).
   no longer exposes (peer range `typescript ^5`), and pnpm resolves peers from the project, so it can't be a
   regular dev dependency. Versions are pinned in the `gen-types` recipe; move it back to `devDependencies` once
   it supports TS 7. The exported spec is committed at `services/api/openapi.json` next to the generated types.
+- **CI: one workflow per concern** (`api`, `web`, `types`), each with its own `paths:` filter, since `paths`
+  applies per workflow, not per job. The types drift check is separate because it must run on changes to
+  either the API or `frontend/src/api/`. Third-party actions are pinned by commit SHA.
+- **CI does not build Docker images** in M0. `just dev` exercises them locally; revisit when images are
+  deployed or published.
 - **`packages/contracts` stays empty** until M1 introduces shared message schemas.
 - Repo-level choices (monorepo, no Nx, `just`): [ADR 0001](../adr/0001-monorepo-and-modular-monolith.md).
 
@@ -129,12 +136,11 @@ are declared in the OpenAPI spec).
 | 3 | Frontend skeleton: Vite, React 19, TS 7 strict, oxlint (type-aware), Prettier, Vitest + Testing Library | `just web-check` (lint, format check, tsc, vitest) passes | ✅ [#3](https://github.com/MLiapkalo/obriy/pull/3) |
 | 4 | Type generation + health UI: OpenAPI export script, `openapi-typescript`, `openapi-fetch` client, TanStack Query polling, status component | `just gen-types` produces committed types; component test renders ok and error states from mocked responses | ✅ [#4](https://github.com/MLiapkalo/obriy/pull/4) |
 | 5 | Dev Dockerfiles + root `compose.yaml` (db, api, web) + Vite proxy + `.env.example` + `just dev` | Both demo steps work from a clean clone | ✅ [#5](https://github.com/MLiapkalo/obriy/pull/5) |
-| 6 | GitHub Actions: path-filtered `api` and `web` jobs, generated-types drift check | CI green on the PR; a stale types file fails it | |
+| 6 | GitHub Actions: path-filtered `api`, `web` and `types` (generated-types drift check) workflows | CI green on the PR; a stale types file fails it | ✅ [#6](https://github.com/MLiapkalo/obriy/pull/6) |
 | 7 | Close-out: README quick start, CLAUDE.md Commands section, retro below, tick ROADMAP | Demo re-run from a fresh clone | |
 
 ## 6. Open questions
 
-- Should CI also build the Docker images (`docker compose build`)?
 - Exact `just` recipe names.
 
 ## 7. As built / retro

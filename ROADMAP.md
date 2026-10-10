@@ -211,7 +211,7 @@ Scope:
 
 ## Progress
 
-**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–5 done; next: task 6 (GitHub Actions: path-filtered `api`/`web` jobs, generated-types drift check).
+**Current focus:** M0 ([M0-skeleton.md](docs/milestones/M0-skeleton.md)) — tasks 1–6 done; next: task 7 (close-out: README quick start, CLAUDE.md Commands, retro, demo from a fresh clone).
 
 - [~] M0 — Skeleton
 - [ ] M1 — Fake drone on a map
