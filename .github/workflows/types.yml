@@ -14,7 +14,7 @@ on:
     branches: [main]
     paths: *paths
 jobs:
-  check:
+  types:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -23,11 +23,13 @@ jobs:
         with:
           # no `version:` - setup-uv reads [tool.uv] required-version from pyproject.toml
           enable-cache: true
+          save-cache: false # restore only; api.yml owns the uv cache
       - name: Install pnpm and Node.js
         uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
         with:
           working-directory: frontend
           install: false
+          save-cache: false # restore only; web.yml owns the pnpm cache
       - name: Install just
         uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4
         with:
