@@ -59,4 +59,7 @@ Rules:
 - Python 3.14, `uv` workspace, `ruff` (lint + format), `mypy --strict`, `pytest`.
 - Frontend: Node 22 (exact version pinned via `devEngines.runtime`), `pnpm` 12, TypeScript 7, Vite, oxlint (type-aware), Prettier, Vitest.
 - `just` as the task runner; Docker Compose for local stack.
-- Commands: _to be filled in during M0._
+- Commands (`just --list`): `dev` (compose stack with watch), `api-check` / `web-check` (lint, format check,
+  typecheck, tests), `api-fmt` / `web-fmt`, `api-run` / `web-dev` (run on the host), `gen-types` (OpenAPI →
+  `frontend/src/api/schema.d.ts`; CI fails if stale).
+- CI: `.github/workflows/` — `api`, `web`, `types`, path-filtered; third-party actions pinned by commit SHA.
