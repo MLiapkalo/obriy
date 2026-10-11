@@ -103,9 +103,11 @@ Scope:
 **Demo:** open the page → a drone icon moves along a circle on the map; HUD shows altitude, speed,
 heading, battery, updating 10×/sec. Kill the backend → UI shows "link lost", reconnects when it's back.
 
+Design doc: [docs/milestones/M1-fake-drone.md](docs/milestones/M1-fake-drone.md).
+
 Scope:
 - `VehicleLink` interface (a `typing.Protocol`, i.e. structural typing) + `FakeVehicle` implementation (async loop generating telemetry). Lives inside the API for now; moves to `services/gateway/` in M5.
-- Pydantic `Telemetry` model; WebSocket endpoint `/ws/telemetry` broadcasting to all clients.
+- Pydantic `Telemetry` model; WebSocket endpoint `/api/ws/telemetry` broadcasting to all clients.
 - Frontend: MapLibre map, drone marker with heading, HUD panel, `useTelemetry` hook with
   reconnect + exponential backoff, connection status indicator.
 - Tests: simulator unit test, WebSocket test with FastAPI `TestClient`.
@@ -211,10 +213,10 @@ Scope:
 
 ## Progress
 
-**Current focus:** M1 — Fake drone on a map; next: design session → `docs/milestones/M1-*.md`.
+**Current focus:** M1 — Fake drone on a map; design done, next: task 1 (contracts package).
 
 - [x] M0 — Skeleton
-- [ ] M1 — Fake drone on a map
+- [~] M1 — Fake drone on a map
 - [ ] M2 — Flight recording & replay
 - [ ] M3 — Auth & roles
 - [ ] M4 — Missions & commands
