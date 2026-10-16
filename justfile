@@ -5,14 +5,15 @@ dev:
     docker compose up --build --watch
 
 api-check:
-    uv run ruff check services/api
-    uv run ruff format --check services/api
-    uv run mypy services/api/src services/api/tests
+    uv run ruff check services/api packages/contracts
+    uv run ruff format --check services/api packages/contracts
+    uv run mypy services/api/src services/api/tests packages/contracts/src packages/contracts/tests
     uv run pytest services/api
+    uv run pytest packages/contracts
 
 api-fmt:
-    uv run ruff check --fix services/api
-    uv run ruff format services/api
+    uv run ruff check --fix services/api packages/contracts
+    uv run ruff format services/api packages/contracts
 
 api-run:
     uv run uvicorn --factory obriy_api.main:create_app --reload

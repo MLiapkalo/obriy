@@ -8,10 +8,12 @@ WORKDIR /app
 
 COPY uv.lock pyproject.toml ./
 COPY services/api/pyproject.toml services/api/
+COPY packages/contracts/pyproject.toml packages/contracts/
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev --package obriy-api --no-install-workspace
 
 COPY services/api/src services/api/src
+COPY packages/contracts/src packages/contracts/src
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev --package obriy-api
 

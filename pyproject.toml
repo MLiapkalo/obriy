@@ -4,7 +4,7 @@
 required-version = "==0.12.24"
 
 [tool.uv.workspace]
-members = ["services/*"]
+members = ["services/*", "packages/*"]
 
 [dependency-groups]
 dev = [
@@ -16,7 +16,7 @@ dev = [
 
 [tool.ruff]
 line-length = 120
-src = ["services/*/src"]
+src = ["services/*/src", "packages/*/src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "ASYNC", "RUF"]

@@ -12,7 +12,8 @@ mission planning, vehicle commands, flight recording and replay, live video — 
 - `frontend/` — React + TypeScript (Vite). API types are generated from the API's OpenAPI spec.
 - `services/api/` — FastAPI modular monolith on Postgres (async SQLAlchemy). Currently health endpoints only;
   domain modules arrive with later milestones.
-- `packages/contracts/` — placeholder for shared message schemas (from M1).
+- `packages/contracts/` — shared message schemas (Pydantic), a uv workspace member used by the API; injected
+  into its OpenAPI spec, so the frontend gets their TS types.
 - `infra/` — placeholder for infrastructure config (SITL, MediaMTX).
 - `compose.yaml` — local dev stack: Postgres, API, web.
 - `docs/adr/` — architecture decision records. `docs/milestones/` — per-milestone design docs.
