@@ -5,6 +5,7 @@ on:
   pull_request:
     paths: &paths
       - services/api/**
+      - packages/**
       - pyproject.toml
       - uv.lock
       - justfile
