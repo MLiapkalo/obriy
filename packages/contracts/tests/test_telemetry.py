@@ -63,3 +63,11 @@ def test_negative_ts_rejected() -> None:
 def test_boundary_values_accepted(field: str, value: object) -> None:
     t = Telemetry.model_validate({**valid_telemetry(), field: value})
     assert getattr(t, field) == value
+
+
+def test_unknown_field_rejected() -> None:
+    with pytest.raises(ValidationError) as exc_info:
+        Telemetry.model_validate({**valid_telemetry(), "groundspeed": 1})
+    error = exc_info.value.errors()[0]
+    assert error["type"] == "extra_forbidden"
+    assert error["loc"] == ("groundspeed",)

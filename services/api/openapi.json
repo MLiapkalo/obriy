@@ -140,6 +140,98 @@
           "checks"
         ],
         "title": "ReadinessResponse"
+      },
+      "Telemetry": {
+        "additionalProperties": false,
+        "properties": {
+          "vehicle_id": {
+            "title": "Vehicle Id",
+            "type": "string"
+          },
+          "lat": {
+            "maximum": 90,
+            "minimum": -90,
+            "title": "Lat",
+            "type": "number"
+          },
+          "lon": {
+            "maximum": 180,
+            "minimum": -180,
+            "title": "Lon",
+            "type": "number"
+          },
+          "alt_rel_m": {
+            "title": "Alt Rel M",
+            "type": "number"
+          },
+          "groundspeed_mps": {
+            "minimum": 0,
+            "title": "Groundspeed Mps",
+            "type": "number"
+          },
+          "heading_deg": {
+            "exclusiveMaximum": 360,
+            "minimum": 0,
+            "title": "Heading Deg",
+            "type": "number"
+          },
+          "battery_voltage_v": {
+            "minimum": 0,
+            "title": "Battery Voltage V",
+            "type": "number"
+          },
+          "battery_remaining_pct": {
+            "anyOf": [
+              {
+                "maximum": 100,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Battery Remaining Pct"
+          }
+        },
+        "required": [
+          "vehicle_id",
+          "lat",
+          "lon",
+          "alt_rel_m",
+          "groundspeed_mps",
+          "heading_deg",
+          "battery_voltage_v",
+          "battery_remaining_pct"
+        ],
+        "title": "Telemetry",
+        "type": "object"
+      },
+      "TelemetryMessage": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "telemetry",
+            "default": "telemetry",
+            "title": "Type",
+            "type": "string"
+          },
+          "ts": {
+            "minimum": 0,
+            "title": "Ts",
+            "type": "integer"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/Telemetry"
+          }
+        },
+        "required": [
+          "type",
+          "ts",
+          "payload"
+        ],
+        "title": "TelemetryMessage",
+        "type": "object"
       }
     }
   }

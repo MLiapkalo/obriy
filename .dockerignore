@@ -3,4 +3,6 @@
 !uv.lock
 !services/api/pyproject.toml
 !services/api/src
+!packages/contracts/pyproject.toml
+!packages/contracts/src
 **/__pycache__

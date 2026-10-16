@@ -120,9 +120,11 @@ newest sample; history is M2. Rate: 10 Hz.
 | `battery_voltage_v` | float, ≥ 0 | measured volts |
 | `battery_remaining_pct` | int 0..100 \| null | estimate; null when unknown |
 
-Units are part of field names. Messages are JSON text frames. The models are added to the OpenAPI spec's
-`components.schemas` (FastAPI does not describe WebSockets), so `just gen-types` emits their TS types and the CI
-drift check covers them.
+Units are part of field names. Messages are JSON text frames. Both models reject unknown keys
+(`extra="forbid"`). The models are added to the OpenAPI spec's `components.schemas` (FastAPI does not describe
+WebSockets) by an `ObriyAPI(FastAPI)` subclass overriding `openapi()`, using the serialization-mode schema with
+defaults required (so `type` is non-optional in TS); `just gen-types` emits their TS types and the CI drift check
+covers them.
 
 ### `WS /api/ws/telemetry`
 

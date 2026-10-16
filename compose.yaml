@@ -12,10 +12,15 @@ services:
         - action: sync
           path: services/api/src
           target: /app/services/api/src
+        - action: sync
+          path: packages/contracts/src
+          target: /app/packages/contracts/src
         - action: rebuild
           path: uv.lock
         - action: rebuild
           path: services/api/pyproject.toml
+        - action: rebuild
+          path: packages/contracts/pyproject.toml
 
   web:
     build: ./frontend

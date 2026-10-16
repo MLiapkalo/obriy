@@ -75,6 +75,37 @@ export interface components {
             status: "ok" | "degraded";
             checks: components["schemas"]["Checks"];
         };
+        /** Telemetry */
+        Telemetry: {
+            /** Vehicle Id */
+            vehicle_id: string;
+            /** Lat */
+            lat: number;
+            /** Lon */
+            lon: number;
+            /** Alt Rel M */
+            alt_rel_m: number;
+            /** Groundspeed Mps */
+            groundspeed_mps: number;
+            /** Heading Deg */
+            heading_deg: number;
+            /** Battery Voltage V */
+            battery_voltage_v: number;
+            /** Battery Remaining Pct */
+            battery_remaining_pct: number | null;
+        };
+        /** TelemetryMessage */
+        TelemetryMessage: {
+            /**
+             * Type
+             * @default telemetry
+             * @constant
+             */
+            type: "telemetry";
+            /** Ts */
+            ts: number;
+            payload: components["schemas"]["Telemetry"];
+        };
     };
     responses: never;
     parameters: never;
