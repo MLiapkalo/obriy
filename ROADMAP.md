@@ -213,7 +213,7 @@ Scope:
 
 ## Progress
 
-**Current focus:** M1 — Fake drone on a map; task 1 (contracts package) in review, next: task 2 (fake drone).
+**Current focus:** M1 — Fake drone on a map; task 1 done, next: task 2 (fake drone: `VehicleLink`, `FakeVehicle`).
 
 - [x] M0 — Skeleton
 - [~] M1 — Fake drone on a map

@@ -5,6 +5,8 @@ services:
       dockerfile: services/api/Dockerfile
     environment:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-obriy}:${POSTGRES_PASSWORD:-root}@db:5432/${POSTGRES_DB:-obriy}
+      FAKE_HOME_LAT:
+      FAKE_HOME_LON:
     ports: ["8000:8000"]
     depends_on: [db]
     develop:

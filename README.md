@@ -29,7 +29,8 @@ just dev    # docker compose up --build --watch
 ```
 
 Open http://localhost:5173. The API is on http://localhost:8000 (`/docs` for OpenAPI).
-Defaults need no configuration; to override database credentials, copy `.env.example` to `.env`.
+Defaults need no configuration; to override database credentials or the fake drone's home position
+(`FAKE_HOME_LAT` / `FAKE_HOME_LON`, the centre of its circle), copy `.env.example` to `.env`.
 
 ## Development
 
