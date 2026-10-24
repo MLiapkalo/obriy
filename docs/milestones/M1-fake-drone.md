@@ -181,8 +181,8 @@ Plain `def`: calling an async generator function returns the iterator without `a
 | # | Task | Acceptance check | PR |
 |---|------|------------------|----|
 | 1 | Contracts: `packages/contracts` uv workspace member with `Telemetry` + `TelemetryMessage`; inject into OpenAPI `components.schemas`; regenerate TS types; API Dockerfile and compose watch include the package | `just api-check` passes; tests: valid sample → expected JSON, heading 400 rejected; `schema.d.ts` has the message types | ✅ [#9](https://github.com/MLiapkalo/obriy/pull/9) |
-| 2 | Fake drone: `VehicleLink` Protocol, `FakeVehicle.state_at`, `telemetry()` async generator, `FAKE_HOME_*` settings | Tests: position/heading at t=0 and after a quarter lap, battery cycle restarts, stream yields 3 ordered samples | |
-| 3 | `TelemetryBroadcaster` + reader task in `lifespan` (start, cancel, retry after 1 s) | Tests: two subscribers get the same messages; full queue keeps newest 10; reader recovers after the stream raises | |
+| 2 | Fake drone: `VehicleLink` Protocol, `FakeVehicle.state_at`, `telemetry()` async generator, `FAKE_HOME_*` settings | Tests: position/heading at t=0 and after a quarter lap, battery cycle restarts, stream yields 3 ordered samples | ✅ [#10](https://github.com/MLiapkalo/obriy/pull/10) |
+| 3 | `TelemetryBroadcaster` + reader task in `lifespan` (start, cancel, retry after 1 s) | Tests: two subscribers get the same messages; full queue keeps newest 10; reader recovers after the stream raises | ✅ [#11](https://github.com/MLiapkalo/obriy/pull/11) |
 | 4 | WS endpoint `/api/ws/telemetry` (TaskGroup send/receive, unsubscribe in `finally`); Vite proxy `ws: true` | `TestClient` + scripted vehicle: two clients receive the same messages, disconnect removes the subscription; messages visible in browser devtools | |
 | 5 | `TelemetryClient` + Zustand store + status indicator + `useTelemetryConnection()` | Vitest with fake timers and fake WebSocket: backoff grows/caps/resets, stale after 1 s, forced reconnect after 5 s; demo step 3 | |
 | 6 | HUD: altitude, speed, heading, battery via selectors; greyed when link lost | Component test: store values render; greyed state | |

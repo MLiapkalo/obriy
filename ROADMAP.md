@@ -213,7 +213,7 @@ Scope:
 
 ## Progress
 
-**Current focus:** M1 — Fake drone on a map; task 1 done, next: task 2 (fake drone: `VehicleLink`, `FakeVehicle`).
+**Current focus:** M1 — Fake drone on a map; tasks 1–3 done, next: task 4 (WS endpoint `/api/ws/telemetry` + Vite proxy `ws: true`).
 
 - [x] M0 — Skeleton
 - [~] M1 — Fake drone on a map
