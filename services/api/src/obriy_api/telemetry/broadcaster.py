@@ -7,6 +7,10 @@ class TelemetryBroadcaster:
     def __init__(self) -> None:
         self._queues: set[asyncio.Queue[str]] = set()
 
+    @property
+    def subscriber_count(self) -> int:
+        return len(self._queues)
+
     def subscribe(self) -> asyncio.Queue[str]:
         queue = asyncio.Queue[str](maxsize=QUEUE_SIZE)
         self._queues.add(queue)

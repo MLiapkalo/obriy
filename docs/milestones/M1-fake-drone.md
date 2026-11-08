@@ -59,7 +59,8 @@ newest sample; history is M2. Rate: 10 Hz.
   first. A slow client gets fewer, never older, samples and never slows the producer or other clients.
 - **WS handler** (`/api/ws/telemetry`): accept → subscribe → `asyncio.TaskGroup` with a send loop
   (queue → `send_text`) and a receive loop (`receive_text`, ignores input in M1, raises on disconnect); when either
-  ends the group cancels the other → unsubscribe in `finally`. Dead peers are closed by uvicorn's ping (20 s).
+  ends the group cancels the other → unsubscribe in `finally`. `except* WebSocketDisconnect` treats a disconnect from
+  either loop as a normal end; any other exception propagates. Dead peers are closed by uvicorn's ping (20 s).
 
 ### Frontend
 
@@ -143,7 +144,8 @@ Plain `def`: calling an async generator function returns the iterator without `a
 
 ### `TelemetryBroadcaster`
 
-- `subscribe() -> asyncio.Queue[str]`, `unsubscribe(queue)`, `publish(message_json: str) -> None`.
+- `subscribe() -> asyncio.Queue[str]`, `unsubscribe(queue)`, `publish(message_json: str) -> None`,
+  `subscriber_count -> int` (read-only property).
 - Queue size 10; full queue → drop oldest, then put.
 
 ### Configuration
@@ -195,7 +197,6 @@ Plain `def`: calling an async generator function returns the iterator without `a
   jumpy.
 - **Vehicle link status** ("API reachable, drone silent"): M5 adds a backend-reported link state; until then the
   client's 5 s forced reconnect would churn in that case.
-- **Catching TaskGroup errors** (`except*` on the `ExceptionGroup`): exact handling settled in task 4.
 - **Drop policy for event messages**: M4 adds a separate path for messages that must not be dropped.
 
 ## 7. As built / retro
