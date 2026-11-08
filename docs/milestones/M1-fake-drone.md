@@ -59,7 +59,8 @@ newest sample; history is M2. Rate: 10 Hz.
   first. A slow client gets fewer, never older, samples and never slows the producer or other clients.
 - **WS handler** (`/api/ws/telemetry`): accept → subscribe → `asyncio.TaskGroup` with a send loop
   (queue → `send_text`) and a receive loop (`receive_text`, ignores input in M1, raises on disconnect); when either
-  ends the group cancels the other → unsubscribe in `finally`. Dead peers are closed by uvicorn's ping (20 s).
+  ends the group cancels the other → unsubscribe in `finally`. `except* WebSocketDisconnect` treats a disconnect from
+  either loop as a normal end; any other exception propagates. Dead peers are closed by uvicorn's ping (20 s).
 
 ### Frontend
 
@@ -143,7 +144,8 @@ Plain `def`: calling an async generator function returns the iterator without `a
 
 ### `TelemetryBroadcaster`
 
-- `subscribe() -> asyncio.Queue[str]`, `unsubscribe(queue)`, `publish(message_json: str) -> None`.
+- `subscribe() -> asyncio.Queue[str]`, `unsubscribe(queue)`, `publish(message_json: str) -> None`,
+  `subscriber_count -> int` (read-only property).
 - Queue size 10; full queue → drop oldest, then put.
 
 ### Configuration
@@ -183,7 +185,7 @@ Plain `def`: calling an async generator function returns the iterator without `a
 | 1 | Contracts: `packages/contracts` uv workspace member with `Telemetry` + `TelemetryMessage`; inject into OpenAPI `components.schemas`; regenerate TS types; API Dockerfile and compose watch include the package | `just api-check` passes; tests: valid sample → expected JSON, heading 400 rejected; `schema.d.ts` has the message types | ✅ [#9](https://github.com/MLiapkalo/obriy/pull/9) |
 | 2 | Fake drone: `VehicleLink` Protocol, `FakeVehicle.state_at`, `telemetry()` async generator, `FAKE_HOME_*` settings | Tests: position/heading at t=0 and after a quarter lap, battery cycle restarts, stream yields 3 ordered samples | ✅ [#10](https://github.com/MLiapkalo/obriy/pull/10) |
 | 3 | `TelemetryBroadcaster` + reader task in `lifespan` (start, cancel, retry after 1 s) | Tests: two subscribers get the same messages; full queue keeps newest 10; reader recovers after the stream raises | ✅ [#11](https://github.com/MLiapkalo/obriy/pull/11) |
-| 4 | WS endpoint `/api/ws/telemetry` (TaskGroup send/receive, unsubscribe in `finally`); Vite proxy `ws: true` | `TestClient` + scripted vehicle: two clients receive the same messages, disconnect removes the subscription; messages visible in browser devtools | |
+| 4 | WS endpoint `/api/ws/telemetry` (TaskGroup send/receive, unsubscribe in `finally`); Vite proxy `ws: true` | `TestClient` + scripted vehicle: two clients receive the same messages, disconnect removes the subscription; messages visible in browser devtools | ✅ [#12](https://github.com/MLiapkalo/obriy/pull/12) |
 | 5 | `TelemetryClient` + Zustand store + status indicator + `useTelemetryConnection()` | Vitest with fake timers and fake WebSocket: backoff grows/caps/resets, stale after 1 s, forced reconnect after 5 s; demo step 3 | |
 | 6 | HUD: altitude, speed, heading, battery via selectors; greyed when link lost | Component test: store values render; greyed state | |
 | 7 | Map: `maplibre-gl`, rotated drone icon, 30 s trail, home marker, optional `VITE_BASEMAP_URL` raster layer + attribution | Unit test for trail logic (append, keep last 300); demo steps 1–2 | |
@@ -195,7 +197,6 @@ Plain `def`: calling an async generator function returns the iterator without `a
   jumpy.
 - **Vehicle link status** ("API reachable, drone silent"): M5 adds a backend-reported link state; until then the
   client's 5 s forced reconnect would churn in that case.
-- **Catching TaskGroup errors** (`except*` on the `ExceptionGroup`): exact handling settled in task 4.
 - **Drop policy for event messages**: M4 adds a separate path for messages that must not be dropped.
 
 ## 7. As built / retro

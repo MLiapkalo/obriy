@@ -10,6 +10,7 @@ from obriy_api.config import Settings
 from obriy_api.db import create_engine
 from obriy_api.health import router as health_router
 from obriy_api.telemetry import TelemetryBroadcaster, run_reader
+from obriy_api.telemetry import router as telemetry_router
 from obriy_api.vehicle import FakeVehicle
 from obriy_contracts import TelemetryMessage
 
@@ -51,4 +52,5 @@ class ObriyAPI(FastAPI):
 def create_app() -> FastAPI:
     app = ObriyAPI(title="Obriy API", lifespan=lifespan)
     app.include_router(health_router)
+    app.include_router(telemetry_router)
     return app
