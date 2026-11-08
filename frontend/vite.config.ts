@@ -11,6 +11,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
+        ws: true,
         target: process.env.API_PROXY_TARGET ?? 'http://localhost:8000',
       },
     },
