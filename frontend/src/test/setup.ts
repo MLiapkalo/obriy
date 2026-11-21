@@ -1,12 +1,14 @@
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeEach, vi } from 'vitest';
+import { FakeWebSocket } from './fakeWebSocket';
 
 beforeEach(() => {
   vi.stubGlobal(
     'fetch',
     vi.fn(() => Promise.reject(new Error('fetch not mocked'))),
   );
+  vi.stubGlobal('WebSocket', FakeWebSocket);
 });
 
 afterEach(() => {

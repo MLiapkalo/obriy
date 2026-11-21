@@ -70,6 +70,9 @@ newest sample; history is M2. Rate: 10 Hz.
 - **Status**: `connecting` (opening) · `live` (open, messages arriving) · `stale` (open, no message > 1 s) ·
   `lost` (closed, retry scheduled). After 5 s of silence the client closes the socket and reconnects (catches
   half-open connections). Staleness uses the browser's receive time, never `ts` (clock skew).
+- **Silence watchdog**: one timer per socket, armed in `connect()` and re-armed on every message; phase 1 (1 s)
+  sets `stale` only if `live`, phase 2 (5 s total) forces the reconnect. Arming at `connect()` rather than `open`
+  also cuts a socket stuck in the handshake (server frozen) after 5 s.
 - **Backoff**: wait = `min(10 s, 0.5 s · 2^attempt) · Math.random()` (full jitter); attempt resets on `open`.
 - **Rendering**: HUD and status read the store through selectors and re-render only when their value changes.
   The map component renders once; an effect uses `store.subscribe` to move the marker (`setLngLat([lon, lat])`,
@@ -186,7 +189,7 @@ Plain `def`: calling an async generator function returns the iterator without `a
 | 2 | Fake drone: `VehicleLink` Protocol, `FakeVehicle.state_at`, `telemetry()` async generator, `FAKE_HOME_*` settings | Tests: position/heading at t=0 and after a quarter lap, battery cycle restarts, stream yields 3 ordered samples | ✅ [#10](https://github.com/MLiapkalo/obriy/pull/10) |
 | 3 | `TelemetryBroadcaster` + reader task in `lifespan` (start, cancel, retry after 1 s) | Tests: two subscribers get the same messages; full queue keeps newest 10; reader recovers after the stream raises | ✅ [#11](https://github.com/MLiapkalo/obriy/pull/11) |
 | 4 | WS endpoint `/api/ws/telemetry` (TaskGroup send/receive, unsubscribe in `finally`); Vite proxy `ws: true` | `TestClient` + scripted vehicle: two clients receive the same messages, disconnect removes the subscription; messages visible in browser devtools | ✅ [#12](https://github.com/MLiapkalo/obriy/pull/12) |
-| 5 | `TelemetryClient` + Zustand store + status indicator + `useTelemetryConnection()` | Vitest with fake timers and fake WebSocket: backoff grows/caps/resets, stale after 1 s, forced reconnect after 5 s; demo step 3 | |
+| 5 | `TelemetryClient` + Zustand store + status indicator + `useTelemetryConnection()` | Vitest with fake timers and fake WebSocket: backoff grows/caps/resets, stale after 1 s, forced reconnect after 5 s; demo step 3 | 🚧 [#13](https://github.com/MLiapkalo/obriy/pull/13) (tests pending) |
 | 6 | HUD: altitude, speed, heading, battery via selectors; greyed when link lost | Component test: store values render; greyed state | |
 | 7 | Map: `maplibre-gl`, rotated drone icon, 30 s trail, home marker, optional `VITE_BASEMAP_URL` raster layer + attribution | Unit test for trail logic (append, keep last 300); demo steps 1–2 | |
 | 8 | Close-out: README (env vars, demo), retro, tick ROADMAP | Demo passes from a fresh clone | |
